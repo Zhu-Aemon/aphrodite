@@ -2,12 +2,13 @@ const express = require("express");
 const cors = require("cors");
 const {get_commodity_data} = require('./express_service/getPrice')
 const {get_cn_futures} = require('./express_service/get_cn_symbols')
-const {get_display_data} = require("./express_service/get_display_data");
+const {get_display_data} = require("./express_service/get_display_data")
+const {data_update} = require("./express_service/daily_update")
 const app = express();
 app.use(express.json()); // for parsing JSON data in request bodies
 app.use(cors()); // enable CORS for all routes
 
-const server = require("http").createServer(app);
+const server = require("http").createServer(app)
 
 app.get('/cn_futures', (req, res) => {
     const symbol = req.query.name;
@@ -37,6 +38,18 @@ app.get('/display', (req, res) => {
     const symbol = req.query.name
 
     get_display_data(symbol, (data) => {
+        if (data.length > 0) {
+            res.json(data)
+        } else {
+            res.status(404).json({error: 'display data not found'})
+        }
+    })
+})
+
+app.get('/data_update', (req, res) => {
+    const symbol = req.query.name
+
+    data_update(symbol, (data) => {
         if (data.length > 0) {
             res.json(data)
         } else {

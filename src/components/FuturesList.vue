@@ -1,35 +1,41 @@
 <template>
-  <div class="w-1/3 h-96 relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-      <tr>
-        <th scope="col" class="px-6 py-3">
-          期货名称
-        </th>
-        <th scope="col" class="px-6 py-3">
-          期货Symbol
-        </th>
-        <th scope="col" class="px-6 py-3">
-          交易所
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="bg-white border-b hover:bg-gray-50" v-for="future in future_list">
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap cursor-pointer hover:underline hover:text-blue-500 select-none" @dblclick="ft_dblClicked(future.symbol)">
-          {{future.name}}
-        </th>
-        <td class="px-6 py-4">
-          {{future.symbol}}
-        </td>
-        <td class="px-6 py-4">
-          {{future.exchange}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+  <div>
+    <div class="text-2xl font-bold mb-2">
+      国内期货品种（连续合约）
+    </div>
+    <div class="relative overflow-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            期货名称
+          </th>
+          <th scope="col" class="px-6 py-3">
+            期货Symbol
+          </th>
+          <th scope="col" class="px-6 py-3">
+            交易所
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="bg-white border-b hover:bg-gray-50" v-for="future in future_list">
+          <th scope="row"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap cursor-pointer hover:underline hover:text-blue-500 select-none"
+              @dblclick="ft_dblClicked(future)">
+            {{ future.name }}
+          </th>
+          <td class="px-6 py-4">
+            {{ future.symbol }}
+          </td>
+          <td class="px-6 py-4">
+            {{ exchange_dict[future.exchange] }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
 </template>
 
 <script setup>
@@ -38,10 +44,17 @@ import {onMounted, onUnmounted, ref, computed} from "vue"
 import {useStore} from "vuex"
 
 const store = useStore()
-
 const future_list = ref()
-
 const current_ft = computed(() => store.state.current_ft)
+
+const exchange_dict = {
+  "dce": "大连商品交易所",
+  "czce": "郑州商品交易所",
+  "shfe": "上海期货交易所",
+  "ine": "上海国际能源交易中心",
+  "cffex": "中国金融交易所",
+  "gfex": "广州期货交易所"
+}
 
 onMounted(async () => {
   await get_all_futures()
