@@ -2,6 +2,7 @@
 import PerformanceMatrix from "./components/PerformanceMatrix.vue";
 import FuturesList from "./components/FuturesList.vue";
 import PriceTable from "./components/PriceTable.vue";
+import EconTable from "./components/EconTable.vue";
 import {useStore} from "vuex";
 import {computed} from "vue";
 import {onMounted} from "vue";
@@ -34,8 +35,12 @@ onMounted(async () => {
       <PriceTable class="h-[400px] drop-shadow-2xl overflow-auto"/>
     </div>
   </div>
-  <div class="mt-6 px-20">
-    <div class="mb-2 text-xl font-bold">策略信号合成评价</div>
-    <PerformanceMatrix />
+<!--  <div class="mt-6 px-20">-->
+<!--    <div class="mb-2 text-xl font-bold">策略信号合成评价</div>-->
+<!--    <PerformanceMatrix />-->
+<!--  </div>-->
+  <div class="text-2xl font-bold ml-20 mt-10">
+    世界主要经济体实时数据
   </div>
+  <EconTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl mb-20" />
 </template>

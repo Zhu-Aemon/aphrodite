@@ -18,7 +18,7 @@ def init_data_cn(symbol):
     :param symbol: the symbol of the future, for example 'V0'
     :return: nothing
     """
-    conn = sqlite3.connect('../database/cn_commodity.db')
+    conn = sqlite3.connect('./database/cn_commodity.db')
     cur = conn.cursor()
     cur.execute(f"""CREATE TABLE IF NOT EXISTS {symbol} (date DATE, open REAL, high REAL, low REAL, close REAL, volume REAL, inventory REAL)
     """)
@@ -39,7 +39,7 @@ def get_cn_commodity_data(symbol):
     return raw_data
 
 
-def check_table_is_empty_cn(symbol: str, database='database/cn_commodity.db'):
+def check_table_is_empty_cn(symbol: str, database='./database/cn_commodity.db'):
     """
     check if the given table is empty
     :param symbol: commodity symbol
@@ -53,7 +53,7 @@ def check_table_is_empty_cn(symbol: str, database='database/cn_commodity.db'):
         return not bool(cur.fetchall())
 
 
-def get_latest_date_cn(symbol: str, database='database/cn_commodity.db'):
+def get_latest_date_cn(symbol: str, database='./database/cn_commodity.db'):
     """
     get the latest date of the given database sheet
     :param symbol: commodity symbol
@@ -84,7 +84,7 @@ def cn_daily_update(symbol):
         pass
         # print(data)
     price_df = data
-    conn = sqlite3.connect('../database/cn_commodity.db')
+    conn = sqlite3.connect('./database/cn_commodity.db')
     # write data to sqlite3 database
     if check_table_is_empty_cn(symbol=symbol):
         price_df.to_sql(name=symbol, con=conn, if_exists='append', index=False)
@@ -100,7 +100,7 @@ def get_all_futures():
     """
     get all CN future symbols
     """
-    conn = sqlite3.connect('../database/all_cn_futures.db')
+    conn = sqlite3.connect('./database/all_cn_futures.db')
     cur = conn.cursor()
     with conn:
         cur.execute("CREATE TABLE IF NOT EXISTS futures (symbol TEXT, exchange TEXT, name TEXT)")
@@ -109,16 +109,16 @@ def get_all_futures():
 
 
 if __name__ == '__main__':
-    if check_table_is_empty_cn(symbol='futures', database='database/all_cn_futures.db'):
+    if check_table_is_empty_cn(symbol='futures', database='./database/all_cn_futures.db'):
         get_all_futures()
-    all_futures_conn = sqlite3.connect('../database/all_cn_futures.db')
+    all_futures_conn = sqlite3.connect('./database/all_cn_futures.db')
     all_futures_cur = all_futures_conn.cursor()
     with all_futures_conn:
         all_futures_cur.execute("SELECT symbol FROM futures")
         all_futures_data = all_futures_cur.fetchall()
         all_futures_data = [x[0] for x in all_futures_data]
     for symbol_iter in all_futures_data:
-        iter_conn = sqlite3.connect('../database/cn_commodity.db')
+        iter_conn = sqlite3.connect('./database/cn_commodity.db')
         iter_cur = iter_conn.cursor()
         with iter_conn:
             iter_cur.execute(f"CREATE TABLE IF NOT EXISTS {symbol_iter} (date DATE, open REAL, high REAL, low REAL, close REAL, volume REAL, inventory REAL)")

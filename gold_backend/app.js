@@ -51,11 +51,7 @@ app.get('/data_update', (req, res) => {
     const symbol = req.query.name
 
     data_update(symbol, (data) => {
-        if (data.length > 0) {
-            res.json(data)
-        } else {
-            res.status(404).json({error: 'Everything is normal. Do not worry'})
-        }
+        res.json({})
     })
 })
 
