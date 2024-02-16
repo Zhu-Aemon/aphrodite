@@ -4,6 +4,7 @@ const {get_commodity_data} = require('./express_service/getPrice')
 const {get_cn_futures} = require('./express_service/get_cn_symbols')
 const {get_display_data} = require("./express_service/get_display_data")
 const {data_update} = require("./express_service/daily_update")
+const {get_econ_indicators} = require("./express_service/get_econ_indicators")
 const app = express();
 app.use(express.json()); // for parsing JSON data in request bodies
 app.use(cors()); // enable CORS for all routes
@@ -54,6 +55,18 @@ app.get('/data_update', (req, res) => {
             res.json(data)
         } else {
             res.status(404).json({error: 'Everything is normal. Do not worry'})
+        }
+    })
+})
+
+app.get('/econ_indicators', (req, res) => {
+    const date = req.query.date
+
+    get_econ_indicators(date, (data) => {
+        if (data.length > 0) {
+            res.json(data)
+        } else {
+            res.status(404).json({error: 'cannot fetch econ indicators for day ', date})
         }
     })
 })

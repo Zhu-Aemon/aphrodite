@@ -56,13 +56,13 @@ def scrape_indicator():
 def update_indicator():
     econ_indicators = scrape_indicator()
     today = str(datetime.datetime.now().date()).replace('-', '_')
-    conn = sqlite3.connect('../database/Econ_indicators.db')
+    conn = sqlite3.connect('../database/econ_indicators.db')
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS T{today} (indicator TEXT, {', '.join(x + ' TEXT' for x in country_suffix)})")
     econ_indicators.to_sql(con=conn, name='T' + today, index=False, if_exists='append')
 
 
 if __name__ == '__main__':
-    tables = get_table_names('../database/Econ_indicators.db')
+    tables = get_table_names('../database/econ_indicators.db')
     if 'T' + str(datetime.datetime.now().date()).replace('-', '_') not in tables:
         update_indicator()
