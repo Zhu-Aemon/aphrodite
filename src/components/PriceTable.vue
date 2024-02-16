@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="text-2xl font-bold mb-2">
-      历史数据浏览器
-    </div>
-    <div class="w-full relative overflow-auto sm:rounded-lg">
+<!--    <div class="text-2xl font-bold mb-2">-->
+<!--      历史数据浏览器-->
+<!--    </div>-->
+    <div class="relative overflow-auto sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500 sm:rounded-lg">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>

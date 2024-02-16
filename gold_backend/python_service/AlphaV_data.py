@@ -27,7 +27,7 @@ def get_commodity_price_alphaV(symbol, interval='daily'):
 
 
 def init_data(symbol):
-    conn = sqlite3.connect('database/commodity.db')
+    conn = sqlite3.connect('../database/commodity.db')
     cur = conn.cursor()
     cur.execute(f"""CREATE TABLE IF NOT EXISTS {symbol} (date DATE, value REAL)
     """)
@@ -70,7 +70,7 @@ def daily_update(symbol):
     data = get_commodity_price_alphaV(symbol=symbol)
     price_df = pd.DataFrame(data['data'])
     price_df['date'] = pd.to_datetime(price_df['date'])
-    conn = sqlite3.connect('database/commodity.db')
+    conn = sqlite3.connect('../database/commodity.db')
     # write data to sqlite3 database
     if check_table_is_empty(symbol=symbol):
         price_df.to_sql(name=symbol, con=conn, if_exists='append', index=False)

@@ -2,9 +2,8 @@ const exec = require('child_process').exec;
 
 function data_update(symbol, callback) {
     try {
-        const scriptLoc = __dirname.toString().replace('express_service', 'CN_commodity.py')
-        const projLoc = scriptLoc.replace('\\CN_commodity.py', '')
-        exec('python CN_commodity.py', {cwd: projLoc})
+        const project_loc = __dirname.toString().replace('\\express_service\\daily_update.js', '\\python_service')
+        exec('python CN_commodity.py', {cwd: project_loc})
         callback([])
     } catch (error) {
         console.log(error)

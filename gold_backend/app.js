@@ -53,7 +53,7 @@ app.get('/data_update', (req, res) => {
         if (data.length > 0) {
             res.json(data)
         } else {
-            res.status(404).json({error: 'display data not found'})
+            res.status(404).json({error: 'Everything is normal. Do not worry'})
         }
     })
 })

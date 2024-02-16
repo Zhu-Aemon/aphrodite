@@ -6,6 +6,7 @@
 import {createChart} from "lightweight-charts"
 import {computed, ref, watch, onMounted} from 'vue'
 import {useStore} from "vuex"
+import { useWindowSize } from 'vue-window-size'
 import axios from "axios";
 
 const store = useStore()
@@ -14,6 +15,7 @@ const current_ft = computed(() => store.state.current_ft)
 
 const chartContainer = ref()
 const future_data = ref()
+let { width, height } = useWindowSize()
 
 const chart_options = {
   layout: {
@@ -24,8 +26,10 @@ const chart_options = {
     }
   },
   height: 500,
-  width: 1320,
+  width: width.value > 600 ? width.value - 300 : 300,
 }
+
+console.log(width.value)
 
 onMounted(async () => {
   await get_display_data(current_ft.value)

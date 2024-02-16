@@ -21,9 +21,17 @@ onMounted(async () => {
   <div class="text-2xl font-bold ml-8 inline-block rounded-lg py-2 px-3 bg-blue-200 mt-2 mb-4">当前走势：<span class="text-red-500">{{ current_ft }}</span></div>
   <chart />
   <div class="mt-6 px-20 flex">
-    <FuturesList class="mr-10 drop-shadow-2xl h-[400px] overflow-auto"/>
-    <div class="h-[400px] w-2/3 drop-shadow-2xl rounded-b-lg overflow-auto">
-      <PriceTable/>
+    <div>
+      <div class="text-2xl font-bold mb-2">
+        国内期货品种（连续合约）
+      </div>
+      <FuturesList class="mr-10 drop-shadow-2xl h-[400px] overflow-auto"/>
+    </div>
+    <div>
+      <div class="text-2xl font-bold mb-2">
+        历史数据浏览器
+      </div>
+      <PriceTable class="h-[400px] drop-shadow-2xl overflow-auto"/>
     </div>
   </div>
   <div class="mt-6 px-20">

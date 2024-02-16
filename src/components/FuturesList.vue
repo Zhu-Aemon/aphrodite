@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="text-2xl font-bold mb-2">
-      国内期货品种（连续合约）
-    </div>
+<!--    <div class="text-2xl font-bold mb-2">-->
+<!--      国内期货品种（连续合约）-->
+<!--    </div>-->
     <div class="relative overflow-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -40,12 +40,11 @@
 
 <script setup>
 import axios from 'axios'
-import {onMounted, onUnmounted, ref, computed} from "vue"
+import {onMounted, ref} from "vue"
 import {useStore} from "vuex"
 
 const store = useStore()
 const future_list = ref()
-const current_ft = computed(() => store.state.current_ft)
 
 const exchange_dict = {
   "dce": "大连商品交易所",
