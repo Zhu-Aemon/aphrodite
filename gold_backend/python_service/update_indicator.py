@@ -9,6 +9,7 @@ import numpy as np
 import datetime
 import sqlite3
 import shutup
+import pathlib
 
 from database_utils import get_table_names
 
@@ -56,7 +57,9 @@ def scrape_indicator():
 def update_indicator():
     econ_indicators = scrape_indicator()
     today = str(datetime.datetime.now().date()).replace('-', '_')
-    conn = sqlite3.connect('../database/econ_indicators.db')
+    cwd = pathlib.Path(__file__).parent.resolve()
+    database_dir = str(cwd).replace('python_service', 'database')
+    conn = sqlite3.connect(database_dir + r'\econ_indicators.db')
     cur = conn.cursor()
     cur.execute(f"CREATE TABLE IF NOT EXISTS T{today} (indicator TEXT, {', '.join(x + ' TEXT' for x in country_suffix)})")
     econ_indicators.to_sql(con=conn, name='T' + today, index=False, if_exists='append')

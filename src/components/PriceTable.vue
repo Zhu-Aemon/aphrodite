@@ -87,14 +87,14 @@ onMounted(async () => {
 })
 
 const get_future_data = async (symbol) => {
-  const response = await axios.get(`http://localhost:3628/cn_futures?name=${symbol}`)
+  const response = await axios.get(`https://api.financialrisk.online/cn_futures?name=${symbol}`)
   if (response) {
     futures_data.value = response.data
   }
 }
 
 const downloadData = async () => {
-  await axios.get(`http://localhost:3628/cn_futures?name=${current_ft.value}`, {responseType: 'text'})
+  await axios.get(`https://api.financialrisk.online/cn_futures?name=${current_ft.value}`, {responseType: 'text'})
       .then(response=> {
         const obj = JSON.parse(response.data)
         const parser = new Parser()

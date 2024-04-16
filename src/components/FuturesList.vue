@@ -57,7 +57,7 @@ onMounted(async () => {
 })
 
 const get_all_futures = async () => {
-  const response = await axios.get(`http://localhost:3628/all_cn_futures?name=futures`)
+  const response = await axios.get(`https://api.financialrisk.online/all_cn_futures?name=futures`)
   if (response) {
     future_list.value = response.data
   }

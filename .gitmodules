@@ -1,0 +1,3 @@
+[submodule "gold_backend/slingshot_api"]
+	path = gold_backend/slingshot_api
+	url = https://github.com/Zhu-Aemon/slingshot.git

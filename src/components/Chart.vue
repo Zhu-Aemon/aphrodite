@@ -46,7 +46,7 @@ onMounted(async () => {
 })
 
 const get_display_data = async (symbol) => {
-  const response = await axios.get(`http://localhost:3628/display?name=${symbol}`)
+  const response = await axios.get(`https://api.financialrisk.online/display?name=${symbol}`)
   if (response) {
     future_data.value = response.data
   }

@@ -8,13 +8,27 @@ import {computed} from "vue";
 import {onMounted} from "vue";
 import Chart from "./components/Chart.vue";
 import axios from "axios";
+import ForexTable from "./components/ForexTable.vue";
+
+let currentDate = new Date();
+let year = currentDate.getFullYear();
+let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
+let day = String(currentDate.getDate()).padStart(2, '0');
+let dateString = `数据更新时间：${year}年${month}月${day}日`;
 
 const store = useStore()
 const current_ft = computed(() => store.state.current_ft_name)
+const drop_atype_vis = computed(() => store.state.drop_atype_show)
+
 onMounted(async () => {
   // exec()
-  await axios.get(`http://localhost:3628/data_update?name=noname`)
+  await axios.get(`https://api.financialrisk.online/data_update?name=noname`)
 })
+
+const show_selection_menu = () => {
+  console.log(drop_atype_vis.value)
+  store.commit("change_atype_vis", !drop_atype_vis.value)
+}
 </script>
 
 <template>
@@ -23,8 +37,10 @@ onMounted(async () => {
   <chart />
   <div class="mt-6 px-20 flex">
     <div>
-      <div class="text-2xl font-bold mb-2">
-        国内期货品种（连续合约）
+      <div class="text-2xl font-bold mb-2 rounded-2xl py-2 px-3">
+        <div class="flex">
+          国内期货品种（连续合约）
+        </div>
       </div>
       <FuturesList class="mr-10 drop-shadow-2xl h-[400px] overflow-auto"/>
     </div>
@@ -35,12 +51,21 @@ onMounted(async () => {
       <PriceTable class="h-[400px] drop-shadow-2xl overflow-auto"/>
     </div>
   </div>
-<!--  <div class="mt-6 px-20">-->
-<!--    <div class="mb-2 text-xl font-bold">策略信号合成评价</div>-->
-<!--    <PerformanceMatrix />-->
-<!--  </div>-->
+  <div class="text-2xl font-bold ml-20 mt-10">
+    人民币汇率实时数据
+  </div>
+  <div class="text-sm font-medium ml-20 mt-2 text-amber-600">
+    {{dateString}}
+  </div>
+  <ForexTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl" />
   <div class="text-2xl font-bold ml-20 mt-10">
     世界主要经济体实时数据
   </div>
-  <EconTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl mb-20" />
+  <div class="text-sm font-medium ml-20 mt-2 text-amber-600">
+    {{dateString}}
+  </div>
+  <EconTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl" />
+  <div class="text-red-500 mb-20 ml-20 mt-2 font-bold text-sm">
+    红色标注的内容代表该项和上一期相比出现了负增长
+  </div>
 </template>

@@ -2,6 +2,7 @@
 Get Chinese Commodity data and store it in a database for further reference
 """
 import datetime
+import pathlib
 
 import pandas as pd
 import sqlite3
@@ -18,7 +19,9 @@ def init_data_cn(symbol):
     :param symbol: the symbol of the future, for example 'V0'
     :return: nothing
     """
-    conn = sqlite3.connect('./database/cn_commodity.db')
+    cwd = pathlib.Path(__file__).parent.resolve()
+    database_dir = str(cwd).replace('python_service', 'database')
+    conn = sqlite3.connect(database_dir + r'\cn_commodity.db')
     cur = conn.cursor()
     cur.execute(f"""CREATE TABLE IF NOT EXISTS {symbol} (date DATE, open REAL, high REAL, low REAL, close REAL, volume REAL, inventory REAL)
     """)
@@ -74,6 +77,8 @@ def cn_daily_update(symbol):
     :param symbol: the symbol of a given CN future, for example 'V0'
     :return: nothing
     """
+    cwd = pathlib.Path(__file__).parent.resolve()
+    database_dir = str(cwd).replace('python_service', 'database')
     init_data_cn(symbol=symbol)
     data = get_cn_commodity_data(symbol=symbol)
     data.rename(columns={'日期': 'date', '开盘价': 'open', '收盘价': 'close', '最高价': 'high', '最低价': 'low', '成交量': 'volume', '持仓量': 'inventory'}, inplace=True)
@@ -84,12 +89,12 @@ def cn_daily_update(symbol):
         pass
         # print(data)
     price_df = data
-    conn = sqlite3.connect('./database/cn_commodity.db')
+    conn = sqlite3.connect(database_dir + r'\cn_commodity.db')
     # write data to sqlite3 database
-    if check_table_is_empty_cn(symbol=symbol):
+    if check_table_is_empty_cn(symbol=symbol, database=database_dir + r'\cn_commodity.db'):
         price_df.to_sql(name=symbol, con=conn, if_exists='append', index=False)
     else:
-        latest_date = get_latest_date_cn(symbol=symbol)
+        latest_date = get_latest_date_cn(symbol=symbol, database=database_dir + r'\cn_commodity.db')
         try:
             price_df[price_df['date'] > latest_date].to_sql(name=symbol, con=conn, if_exists='append', index=False)
         except TypeError as e:
@@ -100,7 +105,9 @@ def get_all_futures():
     """
     get all CN future symbols
     """
-    conn = sqlite3.connect('./database/all_cn_futures.db')
+    cwd = pathlib.Path(__file__).parent.resolve()
+    database_dir = str(cwd).replace('python_service', 'database')
+    conn = sqlite3.connect(database_dir + r'\all_cn_futures.db')
     cur = conn.cursor()
     with conn:
         cur.execute("CREATE TABLE IF NOT EXISTS futures (symbol TEXT, exchange TEXT, name TEXT)")
@@ -109,20 +116,23 @@ def get_all_futures():
 
 
 if __name__ == '__main__':
-    if check_table_is_empty_cn(symbol='futures', database='./database/all_cn_futures.db'):
+    # get current path
+    cwd = pathlib.Path(__file__).parent.resolve()
+    database_dir = str(cwd).replace('python_service', 'database')
+    if check_table_is_empty_cn(symbol='futures', database=database_dir + r'\all_cn_futures.db'):
         get_all_futures()
-    all_futures_conn = sqlite3.connect('./database/all_cn_futures.db')
+    all_futures_conn = sqlite3.connect(database_dir + r'\all_cn_futures.db')
     all_futures_cur = all_futures_conn.cursor()
     with all_futures_conn:
         all_futures_cur.execute("SELECT symbol FROM futures")
         all_futures_data = all_futures_cur.fetchall()
         all_futures_data = [x[0] for x in all_futures_data]
     for symbol_iter in all_futures_data:
-        iter_conn = sqlite3.connect('./database/cn_commodity.db')
+        iter_conn = sqlite3.connect(database_dir + r'\cn_commodity.db')
         iter_cur = iter_conn.cursor()
         with iter_conn:
             iter_cur.execute(f"CREATE TABLE IF NOT EXISTS {symbol_iter} (date DATE, open REAL, high REAL, low REAL, close REAL, volume REAL, inventory REAL)")
-        if (not check_table_is_empty_cn(symbol=symbol_iter)) and get_latest_date_cn(symbol=symbol_iter) == datetime.datetime.now().date():
+        if (not check_table_is_empty_cn(symbol=symbol_iter, database=database_dir + r'\cn_commodity.db')) and (get_latest_date_cn(symbol=symbol_iter, database=database_dir + r'\cn_commodity.db') == datetime.datetime.now().date() or datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6):
             continue
         cn_daily_update(symbol=symbol_iter)
         print(f'finished {symbol_iter}')
