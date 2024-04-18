@@ -7,7 +7,7 @@
           经济指标
         </th>
         <th scope="col" class="px-6 py-3" v-for="ind in indicator_symbols">
-          {{ ind }}
+          {{ indicator_names[ind] }}
         </th>
       </tr>
       </thead>
@@ -15,7 +15,7 @@
       <tr class="bg-white border-b hover:bg-gray-100" v-for="data in countries_en">
         <th scope="row"
             class="px-6 py-4 font-bold text-black whitespace-nowrap select-none">
-          {{ data }}
+          {{ countries[data] }}
         </th>
         <td class="px-6 py-1"
         v-for="ind in indicator_symbols">
@@ -34,8 +34,10 @@
 import axios from "axios";
 import {onMounted, ref, computed} from "vue";
 
-const countries = ['美国', '中国', '欧洲', '日本', '德国', '英国', '法国', '俄罗斯', '加拿大', '意大利', '澳大利亚']
-const indicator_names = ['GDP', '人口', 'GDP增长率', '利率', '通货膨胀率', '失业率', '经常账户比GDP', '政府债务比GDP']
+const countries = {'US': '美国', 'CN': '中国', 'EU': '欧洲', 'JP': '日本', 'DE': '德国', 'GB': '英国', 'FR': '法国', 'RU': '俄罗斯',
+  'CA':'加拿大', 'IT': '意大利', 'AU': '澳大利亚'}
+const indicator_names = {'GDP': 'GDP', 'POP': '人口', 'GDPYY': 'GDP增长率', 'INTR': '利率', 'IRYY': '通货膨胀率', 'UR': '失业率',
+  'CAG': '经常账户比GDP', 'GDG': '政府债务比GDP'}
 const indicator_symbols = ref()
 const econ_data = ref()
 const countries_en = ref()
@@ -63,13 +65,12 @@ const format_digit = (data, ind) => {
         return `${(econ_data.value[data][ind]["value"] / 1000000).toFixed(2)}M`
       } else if (1000000000000 > econ_data.value[data][ind]["value"] && econ_data.value[data][ind]["value"] >= 1000000000) {
         return `${(econ_data.value[data][ind]["value"] / 1000000000).toFixed(2)}B`
-      } else {
-        console.log(econ_data.value[data][ind]["value"])
-        console.log(1000000000 > econ_data.value[data][ind]["value"] >= 1000000)
-        return '?'
       }
     } else {
       return `${econ_data.value[data][ind]["value"]}%`
+    }
+    if (econ_data.value[data][ind]["value"] === null) {
+      return
     }
   }
 }

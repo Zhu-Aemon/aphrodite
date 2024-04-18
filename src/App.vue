@@ -9,6 +9,7 @@ import {onMounted} from "vue";
 import Chart from "./components/Chart.vue";
 import axios from "axios";
 import ForexTable from "./components/ForexTable.vue";
+import ChinaEcon from "./components/ChinaEcon.vue";
 
 let currentDate = new Date();
 let year = currentDate.getFullYear();
@@ -33,7 +34,24 @@ const show_selection_menu = () => {
 
 <template>
   <div class="text-3xl font-bold ml-6 mt-6">金融风险预测综合屏</div>
-  <div class="text-2xl font-bold ml-8 inline-block rounded-lg py-2 px-3 bg-blue-200 mt-2 mb-4">当前走势：<span class="text-red-500">{{ current_ft }}</span></div>
+  <div class="text-2xl font-bold ml-20 mt-10">
+    世界主要经济体实时数据
+  </div>
+  <div class="text-sm font-medium ml-20 mt-2 text-amber-600">
+    {{dateString}}
+  </div>
+  <EconTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl" />
+  <div class="text-red-500 ml-20 mt-2 font-bold text-sm">
+    红色标注的内容代表该项和上一期相比出现了负增长
+  </div>
+  <div class="text-2xl font-bold ml-20 mt-10">
+    中国特色经济数据专区
+  </div>
+  <ChinaEcon class="mt-4 ml-20" />
+  <div class="text-2xl font-bold ml-20 mt-6 mb-4">
+    <span>国内期货市场走势</span>
+    <div class="rounded-lg inline-block bg-blue-200 py-2 px-3 ml-4">当前走势：<span class="text-red-500">{{ current_ft }}</span></div>
+  </div>
   <chart />
   <div class="mt-6 px-20 flex">
     <div>
@@ -57,15 +75,5 @@ const show_selection_menu = () => {
   <div class="text-sm font-medium ml-20 mt-2 text-amber-600">
     {{dateString}}
   </div>
-  <ForexTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl" />
-  <div class="text-2xl font-bold ml-20 mt-10">
-    世界主要经济体实时数据
-  </div>
-  <div class="text-sm font-medium ml-20 mt-2 text-amber-600">
-    {{dateString}}
-  </div>
-  <EconTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl" />
-  <div class="text-red-500 mb-20 ml-20 mt-2 font-bold text-sm">
-    红色标注的内容代表该项和上一期相比出现了负增长
-  </div>
+  <ForexTable class="mt-2 ml-20 mr-20 drop-shadow-2xl rounded-2xl mb-20" />
 </template>
